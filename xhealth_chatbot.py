@@ -98,7 +98,7 @@ def inject_css():
         """
         <style>
         .stApp {
-            background-color: #f5f7fb;
+            background: linear-gradient(180deg, #08111f 0%, #0b1728 100%);
         }
         .block-container {
             padding-top: 2rem;
@@ -106,7 +106,13 @@ def inject_css():
             max-width: 850px;
         }
         h1, h2, h3 {
-            color: #173a63;
+            color: #e8f1ff;
+        }
+        p, div, span, li {
+            color: #d7e3f7;
+        }
+        .stCaption {
+            color: #9fb3d1 !important;
         }
         .stTextInput label,
         .stSelectbox label,
@@ -114,42 +120,84 @@ def inject_css():
         .stRadio label,
         .stTextArea label,
         .stNumberInput label {
-            color: #173a63 !important;
+            color: #f3f7ff !important;
             font-weight: 600 !important;
             opacity: 1 !important;
         }
-        div[data-baseweb="select"] > div,
-        div[data-baseweb="input"] > div {
-            border-radius: 10px !important;
+        div[data-baseweb="input"] > div,
+        div[data-baseweb="select"] > div {
+            background-color: #13233a !important;
+            color: #f5f9ff !important;
+            border: 1px solid #29496f !important;
+            border-radius: 12px !important;
+            box-shadow: none !important;
+        }
+        div[data-baseweb="select"] * {
+            color: #f5f9ff !important;
+        }
+        input {
+            color: #f5f9ff !important;
+        }
+        .stMultiSelect [data-baseweb="tag"] {
+            background-color: #203754 !important;
+            color: #eef5ff !important;
+        }
+        .stButton > button,
+        .stDownloadButton > button {
+            background: #2b5c97 !important;
+            color: white !important;
+            border: 1px solid #3a6aa5 !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+        }
+        .stButton > button:hover,
+        .stDownloadButton > button:hover {
+            background: #356ba9 !important;
+            border-color: #4d82be !important;
+        }
+        .stCodeBlock, pre {
+            background-color: #0d1b2c !important;
+            color: #eaf2ff !important;
+            border-radius: 12px !important;
+            border: 1px solid #26415f !important;
         }
         .x-card {
-            background: white;
-            border: 1px solid #d9e2f0;
-            border-radius: 14px;
+            background: rgba(18, 33, 53, 0.95);
+            border: 1px solid #274565;
+            border-radius: 16px;
             padding: 18px 20px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(23, 58, 99, 0.06);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
         }
         .x-small {
-            color: #5f6f85;
+            color: #9fb3d1;
             font-size: 0.92rem;
         }
         .x-rank {
-            background: #edf4ff;
-            border-left: 5px solid #2d5b95;
-            border-radius: 10px;
+            background: rgba(22, 40, 64, 0.96);
+            border-left: 5px solid #5fa0ff;
+            border-radius: 12px;
             padding: 14px 16px;
             margin-bottom: 12px;
+            border-top: 1px solid #274565;
+            border-right: 1px solid #274565;
+            border-bottom: 1px solid #274565;
         }
         .x-tag {
             display: inline-block;
-            background: #eef3f9;
-            color: #173a63;
+            background: #1e3551;
+            color: #eaf2ff;
             padding: 4px 10px;
             border-radius: 999px;
             font-size: 0.84rem;
             margin-right: 6px;
             margin-bottom: 6px;
+            border: 1px solid #31557d;
+        }
+        div[data-testid="stAlert"] {
+            background-color: #122238 !important;
+            color: #edf4ff !important;
+            border: 1px solid #29496f !important;
         }
         </style>
         """,
