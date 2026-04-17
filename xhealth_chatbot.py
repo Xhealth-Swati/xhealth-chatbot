@@ -4,7 +4,7 @@ from datetime import datetime
 from dataclasses import dataclass, asdict
 from typing import Dict, List, Tuple
 
-st.set_page_config(page_title="XHealth Chatbot Prototype v2", layout="wide")
+st.set_page_config(page_title="XHealth Chatbot Prototype v2", layout="centered")
 
 # ============================================================
 # XHealth Chatbot Prototype v2
@@ -375,11 +375,12 @@ BASELINE_FIELDS = [
 ]
 
 XHEALTH_COLORS = {
-    "primary": "#1E4D8C",
-    "alert": "#C8102E",
-    "success": "#2E8B57",
-    "gray": "#6C757D",
-    "garnet": "#73000A",
+    "primary": "#4A6785",
+    "soft_blue": "#EEF4FA",
+    "soft_gray": "#F7F9FC",
+    "border": "#DCE4EE",
+    "text": "#2F3A45",
+    "muted": "#6B7785",
 }
 
 
@@ -495,15 +496,48 @@ def inject_styles() -> None:
     st.markdown(
         f"""
         <style>
-            .main-title {{ color: {XHEALTH_COLORS['primary']}; font-weight: 700; }}
-            .section-title {{ color: {XHEALTH_COLORS['garnet']}; font-weight: 700; }}
-            .small-note {{ color: {XHEALTH_COLORS['gray']}; font-size: 0.9rem; }}
+            .stApp {{
+                background-color: {XHEALTH_COLORS['soft_gray']};
+            }}
+            .main-title {{
+                color: {XHEALTH_COLORS['text']};
+                font-weight: 600;
+                margin-bottom: 0.2rem;
+            }}
+            .subtitle {{
+                color: {XHEALTH_COLORS['muted']};
+                font-size: 0.95rem;
+                margin-bottom: 1.2rem;
+            }}
+            .section-card {{
+                background: white;
+                border: 1px solid {XHEALTH_COLORS['border']};
+                border-radius: 14px;
+                padding: 1rem 1rem 0.6rem 1rem;
+                margin-bottom: 1rem;
+            }}
+            .section-title {{
+                color: {XHEALTH_COLORS['text']};
+                font-size: 1.05rem;
+                font-weight: 600;
+                margin-bottom: 0.7rem;
+            }}
             .dx-card {{
-                border: 1px solid #d9d9d9;
+                background: white;
+                border: 1px solid {XHEALTH_COLORS['border']};
                 border-radius: 14px;
                 padding: 1rem;
-                margin-bottom: 1rem;
-                background: white;
+                margin-bottom: 0.8rem;
+            }}
+            .small-note {{
+                color: {XHEALTH_COLORS['muted']};
+                font-size: 0.9rem;
+            }}
+            div[data-testid="stMetric"] {{
+                background: {XHEALTH_COLORS['soft_blue']};
+                border: 1px solid {XHEALTH_COLORS['border']};
+                border-radius: 12px;
+                padding: 0.6rem;
             }}
         </style>
         """,
@@ -513,36 +547,35 @@ def inject_styles() -> None:
 
 def render_sidebar() -> None:
     with st.sidebar:
-        st.markdown("## XHealth Intake Setup")
+        st.markdown("### Setup")
         st.session_state.patient_id = st.text_input("Patient ID", value=st.session_state.patient_id)
         st.session_state.chief_complaint = st.selectbox(
             "Chief Complaint",
             list(CHIEF_COMPLAINT_MAP.keys()),
             index=list(CHIEF_COMPLAINT_MAP.keys()).index(st.session_state.chief_complaint),
         )
-        st.markdown("### Initial Candidate Conditions")
-        for dx in get_candidate_conditions(st.session_state.chief_complaint):
-            st.write(f"- {dx}")
-        if st.button("Reset Session"):
+        with st.expander("Initial candidate conditions", expanded=False):
+            for dx in get_candidate_conditions(st.session_state.chief_complaint):
+                st.write(f"• {dx}")
+        if st.button("Reset session", use_container_width=True):
             st.session_state.baseline = {}
             st.session_state.symptoms = {}
             st.rerun()
 
 
 def render_baseline() -> None:
+    st.markdown("<div class='section-card'>", unsafe_allow_html=True)
     st.markdown("<div class='section-title'>1. Baseline Intake</div>", unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    for i, (key, label) in enumerate(BASELINE_FIELDS):
-        target = c1 if i % 2 == 0 else c2
-        with target:
-            if "severity" in key:
-                st.session_state.baseline[key] = st.slider(label, 0, 10, st.session_state.baseline.get(key, 0), key=f"base_{key}")
-            elif key == "trajectory":
-                st.session_state.baseline[key] = st.selectbox(label, ["", "improving", "worsening", "stable", "fluctuating"], key=f"base_{key}")
-            elif key == "pattern":
-                st.session_state.baseline[key] = st.selectbox(label, ["", "constant", "intermittent"], key=f"base_{key}")
-            else:
-                st.session_state.baseline[key] = st.text_input(label, value=st.session_state.baseline.get(key, ""), key=f"base_{key}")
+    for key, label in BASELINE_FIELDS:
+        if "severity" in key:
+            st.session_state.baseline[key] = st.slider(label, 0, 10, st.session_state.baseline.get(key, 0), key=f"base_{key}")
+        elif key == "trajectory":
+            st.session_state.baseline[key] = st.selectbox(label, ["", "improving", "worsening", "stable", "fluctuating"], key=f"base_{key}")
+        elif key == "pattern":
+            st.session_state.baseline[key] = st.selectbox(label, ["", "constant", "intermittent"], key=f"base_{key}")
+        else:
+            st.session_state.baseline[key] = st.text_input(label, value=st.session_state.baseline.get(key, ""), key=f"base_{key}")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def add_symptom(symptom_name: str, patient_phrase: str = "") -> None:
@@ -563,7 +596,8 @@ def add_symptom(symptom_name: str, patient_phrase: str = "") -> None:
 
 
 def render_branching(chief_complaint: str) -> None:
-    st.markdown("<div class='section-title'>2. Complaint-Specific Questions</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>2. Symptom Questions</div>", unsafe_allow_html=True)
     for prompt, options in BRANCHING_QUESTIONS.get(chief_complaint, []):
         if len(options) == 1:
             symptom = options[0]
@@ -576,40 +610,44 @@ def render_branching(chief_complaint: str) -> None:
             selected = st.selectbox(prompt, [""] + options, key=f"sel_{chief_complaint}_{prompt}")
             if selected:
                 add_symptom(selected, selected)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_dashboard(ranked: List[dict]) -> None:
-    st.markdown("<div class='section-title'>3. PCP Dashboard Preview</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>3. Ranked Differential</div>", unsafe_allow_html=True)
     if not ranked:
-        st.info("Complete the intake and symptom questions to generate the differential diagnosis.")
+        st.info("Complete the intake to generate ranked diagnoses.")
+        st.markdown("</div>", unsafe_allow_html=True)
         return
 
-    for dx in ranked:
+    for dx in ranked[:3]:
         st.markdown("<div class='dx-card'>", unsafe_allow_html=True)
-        a, b, c = st.columns([3, 2, 2])
-        a.markdown(f"### {dx['condition_name']}")
+        a, b, c = st.columns([3, 1.4, 1.4])
+        a.markdown(f"**{dx['condition_name']}**")
         b.metric("ICD-10", dx["icd10_code"])
-        c.metric("Precision Metric", dx["precision_metric"])
-        st.caption(f"Rank #{dx['rank']} · SNOMED: {dx['snomed_code']} · Vector: {dx['vector']} · Category: {dx['category']}")
+        c.metric("Score", dx["precision_metric"])
+        st.caption(f"Rank #{dx['rank']} · Vector: {dx['vector']}")
         if dx["symptoms"]:
-            st.dataframe(dx["symptoms"], use_container_width=True, hide_index=True)
-        else:
-            st.write("No supported symptom evidence captured for this diagnosis yet.")
+            concise_rows = [
+                {"Symptom": s["name"], "Severity": s["severity"], "Contribution": s["support_score"]}
+                for s in dx["symptoms"][:5]
+            ]
+            st.dataframe(concise_rows, use_container_width=True, hide_index=True)
         st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_json_and_appendix(ranked: List[dict]) -> None:
-    st.markdown("<div class='section-title'>4. Standardized JSON Output</div>", unsafe_allow_html=True)
-    st.code(json.dumps(build_standard_json(ranked), indent=2), language="json")
+    with st.expander("Standardized JSON Output", expanded=False):
+        st.code(json.dumps(build_standard_json(ranked), indent=2), language="json")
 
-    st.markdown("<div class='section-title'>5. Appendix-Ready Evidence</div>", unsafe_allow_html=True)
-    tab1, tab2, tab3 = st.tabs(["Captured Symptoms", "Ranked Differential", "Chief Complaint Map"])
-    with tab1:
-        st.code(json.dumps({k: asdict(v) for k, v in st.session_state.symptoms.items()}, indent=2), language="json")
-    with tab2:
-        st.code(json.dumps(ranked, indent=2), language="json")
-    with tab3:
-        st.code(json.dumps(CHIEF_COMPLAINT_MAP, indent=2), language="json")
+    with st.expander("Appendix-Ready Evidence", expanded=False):
+        tab1, tab2 = st.tabs(["Captured Symptoms", "Ranked Differential"])
+        with tab1:
+            st.code(json.dumps({k: asdict(v) for k, v in st.session_state.symptoms.items()}, indent=2), language="json")
+        with tab2:
+            st.code(json.dumps(ranked, indent=2), language="json")
 
 
 def main() -> None:
@@ -617,9 +655,9 @@ def main() -> None:
     inject_styles()
     render_sidebar()
 
-    st.markdown("<h1 class='main-title'>XHealth Chatbot Prototype v2</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>XHealth Chatbot Prototype</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<div class='small-note'>Streamlit prototype aligned to the Chatbot Logic Lead role: chief complaint intake, baseline symptom capture, complaint-specific branching, diagnosis scoring, vector output, and dashboard-oriented differential diagnosis.</div>",
+        "<div class='subtitle'>A simple prototype for structured intake, diagnosis ranking, and dashboard-ready output.</div>",
         unsafe_allow_html=True,
     )
 
@@ -632,3 +670,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
