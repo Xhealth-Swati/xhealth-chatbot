@@ -319,7 +319,7 @@ def render_screen_picker():
 def render_quick_intake():
     st.markdown('<div class="x-card">', unsafe_allow_html=True)
     st.subheader("Quick Intake")
-    st.markdown('<div class="x-small">Use this screen for your appendix screenshot showing the provider intake form.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="x-small"></div>', unsafe_allow_html=True)
 
     st.session_state.patient_id = st.text_input("Patient ID", value=st.session_state.patient_id)
 
@@ -387,7 +387,7 @@ def render_quick_intake():
 
 def render_ranked_differential():
     st.subheader("Ranked Differential Diagnosis")
-    st.markdown('<div class="x-small">Use this screen for a screenshot showing ranked conditions and clinical evidence.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="x-small"></div>', unsafe_allow_html=True)
 
     if not st.session_state.results:
         st.info("No analysis available yet. Complete the Quick Intake screen first.")
@@ -412,7 +412,7 @@ def render_ranked_differential():
 
 def render_dashboard_summary():
     st.subheader("Dashboard-Ready Summary")
-    st.markdown('<div class="x-small">Use this screen for a clean summary screenshot aligned with provider dashboard handoff.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="x-small"></div>', unsafe_allow_html=True)
 
     if not st.session_state.results:
         st.info("No summary available yet. Complete the Quick Intake screen first.")
@@ -450,7 +450,7 @@ def render_dashboard_summary():
 
 def render_json_output():
     st.subheader("Structured JSON Output")
-    st.markdown('<div class="x-small">Use this screen for your appendix to show interoperability-ready structured output.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="x-small"></div>', unsafe_allow_html=True)
 
     if not st.session_state.results:
         st.info("No JSON output available yet. Complete the Quick Intake screen first.")
@@ -485,3 +485,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
