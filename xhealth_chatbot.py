@@ -375,12 +375,12 @@ BASELINE_FIELDS = [
 ]
 
 XHEALTH_COLORS = {
-    "primary": "#4A6785",
-    "soft_blue": "#EEF4FA",
-    "soft_gray": "#F7F9FC",
-    "border": "#DCE4EE",
-    "text": "#2F3A45",
-    "muted": "#6B7785",
+    "primary": "#1E3A8A",   # dark blue
+    "light": "#EFF6FF",     # very light blue background
+    "border": "#DBEAFE",
+    "text": "#1E293B",
+    "muted": "#64748B",
+    "white": "#FFFFFF",
 }
 
 
@@ -497,47 +497,54 @@ def inject_styles() -> None:
         f"""
         <style>
             .stApp {{
-                background-color: {XHEALTH_COLORS['soft_gray']};
+                background-color: {XHEALTH_COLORS['light']};
             }}
+
             .main-title {{
-                color: {XHEALTH_COLORS['text']};
-                font-weight: 600;
-                margin-bottom: 0.2rem;
+                color: {XHEALTH_COLORS['primary']};
+                font-weight: 700;
+                margin-bottom: 0.3rem;
             }}
+
             .subtitle {{
                 color: {XHEALTH_COLORS['muted']};
                 font-size: 0.95rem;
                 margin-bottom: 1.2rem;
             }}
+
             .section-card {{
-                background: white;
+                background: {XHEALTH_COLORS['white']};
                 border: 1px solid {XHEALTH_COLORS['border']};
-                border-radius: 14px;
-                padding: 1rem 1rem 0.6rem 1rem;
+                border-radius: 12px;
+                padding: 1rem;
                 margin-bottom: 1rem;
             }}
+
             .section-title {{
-                color: {XHEALTH_COLORS['text']};
+                color: {XHEALTH_COLORS['primary']};
                 font-size: 1.05rem;
                 font-weight: 600;
-                margin-bottom: 0.7rem;
+                margin-bottom: 0.6rem;
             }}
+
             .dx-card {{
-                background: white;
-                border: 1px solid {XHEALTH_COLORS['border']};
-                border-radius: 14px;
-                padding: 1rem;
-                margin-bottom: 0.8rem;
+                background: {XHEALTH_COLORS['white']};
+                border-left: 4px solid {XHEALTH_COLORS['primary']};
+                border-radius: 10px;
+                padding: 0.8rem;
+                margin-bottom: 0.6rem;
             }}
+
             .small-note {{
                 color: {XHEALTH_COLORS['muted']};
                 font-size: 0.9rem;
             }}
+
             div[data-testid="stMetric"] {{
-                background: {XHEALTH_COLORS['soft_blue']};
+                background: {XHEALTH_COLORS['light']};
                 border: 1px solid {XHEALTH_COLORS['border']};
-                border-radius: 12px;
-                padding: 0.6rem;
+                border-radius: 10px;
+                padding: 0.4rem;
             }}
         </style>
         """,
@@ -670,4 +677,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
